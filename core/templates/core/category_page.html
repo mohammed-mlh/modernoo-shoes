@@ -616,7 +616,7 @@
         <div class="colors-container">
             {% for color in product.colors.all %}
                 <div class="color-option {% if forloop.first %}selected{% endif %}" 
-                     style="background: {{ color.hex_code }};" 
+                     style="background: {{ color.hex_code }}" 
                      title="{{ color.name }}"
                      data-color="{{ color.name }}"
                      data-color-id="{{ color.id }}"></div>
