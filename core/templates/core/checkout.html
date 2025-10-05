@@ -1,0 +1,516 @@
+{% extends 'core/base.html' %}
+
+{% block extra_head %}
+<style>
+    .checkout-container {
+        min-height: 100vh;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 80px 20px 20px;
+        position: relative;
+    }
+    
+    .checkout-header {
+        text-align: center;
+        margin-bottom: 40px;
+        color: white;
+    }
+    
+    .checkout-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+    
+    .checkout-subtitle {
+        font-size: 1.1rem;
+        opacity: 0.9;
+        font-weight: 300;
+    }
+    
+    .checkout-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr 400px;
+        gap: 30px;
+        align-items: start;
+    }
+    
+    .checkout-form {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        padding: 40px;
+        border: 1px solid rgba(255,255,255,0.2);
+    }
+    
+    .form-section {
+        margin-bottom: 30px;
+    }
+    
+    .section-title {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #1a1a1a;
+        margin-bottom: 20px;
+        position: relative;
+    }
+    
+    .section-title::after {
+        content: '';
+        position: absolute;
+        bottom: -8px;
+        left: 0;
+        width: 40px;
+        height: 3px;
+        background: linear-gradient(90deg, var(--color-primary), #ff6b6b);
+        border-radius: 2px;
+    }
+    
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+    
+    .form-group {
+        margin-bottom: 20px;
+    }
+    
+    .form-group.full-width {
+        grid-column: 1 / -1;
+    }
+    
+    .form-label {
+        display: block;
+        font-weight: 600;
+        color: #1a1a1a;
+        margin-bottom: 8px;
+        font-size: 0.9rem;
+    }
+    
+    .form-input {
+        width: 100%;
+        padding: 15px;
+        border: 2px solid rgba(0,0,0,0.1);
+        border-radius: 12px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: rgba(255,255,255,0.8);
+        backdrop-filter: blur(10px);
+    }
+    
+    .form-input:focus {
+        outline: none;
+        border-color: var(--color-primary);
+        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+        transform: translateY(-2px);
+    }
+    
+    .form-textarea {
+        min-height: 100px;
+        resize: vertical;
+    }
+    
+    .order-summary {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        padding: 30px;
+        position: sticky;
+        top: 100px;
+        border: 1px solid rgba(255,255,255,0.2);
+    }
+    
+    .summary-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1a1a1a;
+        margin-bottom: 25px;
+        text-align: center;
+        position: relative;
+    }
+    
+    .summary-title::after {
+        content: '';
+        position: absolute;
+        bottom: -8px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 3px;
+        background: linear-gradient(90deg, var(--color-primary), #ff6b6b);
+        border-radius: 2px;
+    }
+    
+    .order-items {
+        margin-bottom: 25px;
+    }
+    
+    .order-item {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 15px 0;
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+    
+    .order-item:last-child {
+        border-bottom: none;
+    }
+    
+    .item-image {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    
+    .item-details {
+        flex: 1;
+    }
+    
+    .item-name {
+        font-weight: 600;
+        color: #1a1a1a;
+        margin-bottom: 4px;
+        font-size: 0.9rem;
+    }
+    
+    .item-meta {
+        color: #666;
+        font-size: 0.8rem;
+    }
+    
+    .item-price {
+        font-weight: 700;
+        color: var(--color-primary);
+        font-size: 0.9rem;
+    }
+    
+    .summary-totals {
+        border-top: 2px solid rgba(0,0,0,0.1);
+        padding-top: 20px;
+        margin-top: 20px;
+    }
+    
+    .summary-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        font-size: 1rem;
+    }
+    
+    .summary-row.total {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--color-primary);
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 1px solid rgba(0,0,0,0.1);
+    }
+    
+    .place-order-btn {
+        width: 100%;
+        background: linear-gradient(135deg, var(--color-primary), #ff6b6b);
+        color: white;
+        border: none;
+        padding: 18px;
+        border-radius: 15px;
+        font-size: 1.1rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 25px;
+        box-shadow: 0 8px 25px rgba(239, 68, 68, 0.3);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    
+    .place-order-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 35px rgba(239, 68, 68, 0.4);
+    }
+    
+    .place-order-btn:active {
+        transform: translateY(-1px);
+    }
+    
+    .place-order-btn:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+    }
+    
+    .back-to-cart {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: white;
+        text-decoration: none;
+        font-weight: 600;
+        margin-bottom: 30px;
+        transition: all 0.3s ease;
+        opacity: 0.9;
+    }
+    
+    .back-to-cart:hover {
+        opacity: 1;
+        transform: translateX(-5px);
+    }
+    
+    .back-to-cart svg {
+        width: 20px;
+        height: 20px;
+    }
+    
+    .message-toast {
+        position: fixed;
+        top: 100px;
+        right: 20px;
+        padding: 15px 25px;
+        border-radius: 15px;
+        color: white;
+        font-weight: 600;
+        z-index: 1000;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        transform: translateX(400px);
+        transition: transform 0.3s ease;
+    }
+    
+    .message-toast.show {
+        transform: translateX(0);
+    }
+    
+    .message-toast.success {
+        background: linear-gradient(135deg, #10b981, #059669);
+    }
+    
+    .message-toast.error {
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+    }
+    
+    @media (max-width: 768px) {
+        .checkout-content {
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        
+        .form-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .checkout-form {
+            padding: 25px;
+        }
+        
+        .order-summary {
+            position: static;
+            margin-top: 20px;
+        }
+        
+        .checkout-title {
+            font-size: 2rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="checkout-container">
+    <div class="checkout-header">
+        <h1 class="checkout-title">Checkout</h1>
+        <p class="checkout-subtitle">Complete your purchase</p>
+    </div>
+    
+    <div class="checkout-content">
+        <div class="checkout-form">
+            <a href="{% url 'cart' %}" class="back-to-cart">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                </svg>
+                Back to Cart
+            </a>
+            
+            <form id="checkoutForm">
+                <div class="form-section">
+                    <h2 class="section-title">Customer Information</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="customer_name" class="form-label">Full Name *</label>
+                            <input type="text" id="customer_name" name="customer_name" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="customer_phone" class="form-label">Phone Number *</label>
+                            <input type="tel" id="customer_phone" name="customer_phone" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="customer_city" class="form-label">City *</label>
+                            <input type="text" id="customer_city" name="customer_city" class="form-input" required>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="customer_address" class="form-label">Full Address *</label>
+                            <textarea id="customer_address" name="customer_address" class="form-input form-textarea" required></textarea>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <h2 class="section-title">Payment Information</h2>
+                    <p style="color: #666; margin-bottom: 20px;">Payment will be collected upon delivery (Cash on Delivery)</p>
+                    <div class="form-group">
+                        <label for="payment_notes" class="form-label">Additional Notes (Optional)</label>
+                        <textarea id="payment_notes" name="payment_notes" class="form-input form-textarea" placeholder="Any special instructions for delivery..."></textarea>
+                    </div>
+                </div>
+            </form>
+        </div>
+        
+        <div class="order-summary">
+            <h2 class="summary-title">Order Summary</h2>
+            
+            <div class="order-items">
+                {% for item in cart_items %}
+                <div class="order-item">
+                    <img src="{% if item.product.image %}{{ item.product.image.url }}{% else %}https://images.pexels.com/photos/112285/pexels-photo-112285.jpeg{% endif %}" 
+                         alt="{{ item.product.name }}" class="item-image">
+                    
+                    <div class="item-details">
+                        <div class="item-name">{{ item.product.name }}</div>
+                        <div class="item-meta">Size: {{ item.size }} | Qty: {{ item.quantity }}</div>
+                        {% if item.color %}
+                        <div class="item-meta">Color: {{ item.color.name }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="item-price">${{ item.total_price }}</div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <div class="summary-totals">
+                <div class="summary-row">
+                    <span>Subtotal:</span>
+                    <span>${{ cart.total_amount }}</span>
+                </div>
+                <div class="summary-row">
+                    <span>Shipping:</span>
+                    <span>Free</span>
+                </div>
+                <div class="summary-row total">
+                    <span>Total:</span>
+                    <span>${{ cart.total_amount }}</span>
+                </div>
+            </div>
+            
+            <button class="place-order-btn" onclick="placeOrder()">
+                Place Order
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+function placeOrder() {
+    const form = document.getElementById('checkoutForm');
+    const submitBtn = document.querySelector('.place-order-btn');
+    const originalText = submitBtn.textContent;
+    
+    // Validate form
+    if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+    }
+    
+    // Disable button and show loading
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Processing...';
+    
+    // Get form data
+    const formData = {
+        customer_name: document.getElementById('customer_name').value,
+        customer_phone: document.getElementById('customer_phone').value,
+        customer_city: document.getElementById('customer_city').value,
+        customer_address: document.getElementById('customer_address').value,
+        payment_notes: document.getElementById('payment_notes').value
+    };
+    
+    // Send order to backend
+    fetch('/api/create-order/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken')
+        },
+        body: JSON.stringify(formData)
+    })
+    .then(response => response.json())
+    .then(data => {
+                 if (data.success) {
+             showMessage('Order placed successfully! Order ID: ' + data.order_id, 'success');
+             
+             // Disable the form and button
+             document.getElementById('checkoutForm').style.opacity = '0.5';
+             document.getElementById('checkoutForm').style.pointerEvents = 'none';
+             submitBtn.textContent = 'Order Placed Successfully!';
+         } else {
+            showMessage('Error: ' + data.error, 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showMessage('An error occurred while placing your order. Please try again.', 'error');
+    })
+    .finally(() => {
+        // Re-enable button
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
+    });
+}
+
+function showMessage(message, type) {
+    // Remove existing messages
+    const existingMessages = document.querySelectorAll('.message-toast');
+    existingMessages.forEach(msg => msg.remove());
+    
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `message-toast ${type}`;
+    alertDiv.textContent = message;
+    
+    document.body.appendChild(alertDiv);
+    
+    // Trigger animation
+    setTimeout(() => {
+        alertDiv.classList.add('show');
+    }, 100);
+    
+    setTimeout(() => {
+        alertDiv.classList.remove('show');
+        setTimeout(() => {
+            alertDiv.remove();
+        }, 300);
+    }, 5000);
+}
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+</script>
+{% endblock %}

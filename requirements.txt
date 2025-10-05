@@ -1,0 +1,14 @@
+asgiref==3.9.1
+diff-match-patch==20241021
+Django==5.2.4
+django-dbbackup==4.3.0
+django-debug-toolbar==6.0.0
+django-extensions==4.1
+django-import-export==4.3.9
+django-simple-history==3.10.1
+pillow==11.3.0
+pytz==2025.2
+sqlparse==0.5.3
+tablib==3.8.0
+tzdata==2025.2
+whitenoise==6.9.0

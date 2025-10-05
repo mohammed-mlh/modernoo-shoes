@@ -1,0 +1,63 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Shoe Collection | Modern Footwear{% endblock %}
+
+{% block extra_head %}
+<style>
+    .grid-item {
+        transition: all 0.3s ease;
+    }
+    .grid-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+    .category-label {
+        transition: background-color 0.3s ease;
+    }
+    .grid-item:hover .category-label {
+        background-color: rgba(0,0,0,0.8);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-6">
+    <!-- Hero Section -->
+    <div class="bg-gradient-to-r from-red-500 to-red-600 p-6 rounded-xl text-white text-center mb-8 shadow-lg">
+        <h1 class="text-3xl md:text-4xl font-bold mb-2">Discover Our Collection</h1>
+        <p class="text-red-100">Premium footwear for every occasion</p>
+    </div>
+
+         <!-- Grid Section -->
+     <div class="grid grid-cols-3 gap-3 md:gap-4">
+                  {% for item in shoe_items %}
+          <a href="{% if item.category_id %}{% url 'category_detail' item.category_id %}{% else %}#{% endif %}" class="grid-item group relative aspect-square overflow-hidden rounded-xl shadow-md">
+            <!-- Image with zoom effect on hover -->
+            <img src="{{ item.image_url }}" 
+                 alt="{{ item.name }}"
+                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
+            
+            <!-- Category Label -->
+            <div class="category-label hidden absolute bottom-0 w-full bg-black/70 text-white py-3 px-4 text-center font-medium">
+            </div>
+            {{ item.name }}
+            
+            <!-- Hover overlay -->
+            <div class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+        </a>
+        {% endfor %}
+    </div>
+
+    <!-- Featured Banner -->
+    <div class="mt-8 bg-gray-900 text-white p-6 rounded-xl overflow-hidden relative">
+        <div class="absolute inset-0 bg-[url('https://images.pexels.com/photos/3261069/pexels-photo-3261069.jpeg')] bg-cover opacity-20"></div>
+        <div class="relative z-10 text-center">
+            <h2 class="text-2xl font-bold mb-2">New Arrivals</h2>
+            <p class="text-gray-300 mb-4 max-w-2xl mx-auto">Explore our latest collection of premium footwear</p>
+            <button class="bg-white text-gray-900 px-6 py-2 rounded-full font-medium hover:bg-gray-100 transition">
+                Shop Now
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}
